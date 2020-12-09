@@ -1,0 +1,23 @@
+.container {
+    margin-top: 15px;
+    max-height: 140px;
+    height: 30%;
+    width: 90%;
+    background-color: rgb(255, 255, 255);
+    border-radius: 5px;
+    padding: 20px;
+    overflow-y: scroll; 
+    margin-bottom: -10px;
+    border: 2px solid rgb(170, 170, 170);
+}
+
+.codex-editor__redactor {
+    padding-bottom: 10px;
+    padding-bottom: 0px !important;
+    height: 200px;
+}
+
+.cdx-marker {
+    background: rgba(245, 235, 111, 0.29);
+    padding: 3px 0;
+  }

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Expires" content="-1">
+    <title>Data Bridge - connect thoughts...</title>
+    <meta data-react-helmet="true" name="description" content="Add, Edit and delete posts and list down by just navigating between diffent pages.">
+    <meta charset="UTF-8"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" 
+      href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" 
+      integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU"
+      crossorigin="anonymous">
+    <!-- <link href="suneditor/css/suneditor.css" rel="stylesheet">
+    <script src="suneditor/js/suneditor.js"></script> -->
+</head>
+<body>
+    <div class="header">
+        <h1>Data Bridge</h1>
+        <p class="sub_header">Connect thoughts.....</p>
+        <button id="add_new_post" class="add_new_post">New Post</button>
+    </div>
+    <div id='post_container' class="post_container">
+        <div id='spinner' class="spinner"></div>
+    </div>
+    <div class="pagination">
+        <a id='page_prev' class='pagination_prev_button' title="Previous">&laquo;</a>
+        <a id='page_next_2' class='pagination_next_button' title="Next"}>&raquo;</a>
+    </div>
+    
+    <div id="my_modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Hey New Post here...</h2>
+            <form id='form_popup'>
+                <label for="title">Title</label><br>
+                <input type="text" id="post_title" name="post_title" value="What's Up"><br>
+                <label for="description">Description</label><br>
+                <!-- <textarea id="post_description" name="post_description" rows="4" cols="50">This is your first post here...
+                </textarea> -->
+                <div class="container">
+                    <div id="editor"></div>
+                </div>
+                <br><br>
+                <input id='post_submit' url="http://localhost:3001/" type="submit" value="Post now">
+            </form> 
+        </div> 
+    </div>
+    <!-- <script src="../js/popup.js" type="text/javascript"></script> -->
+</body>
+</html>

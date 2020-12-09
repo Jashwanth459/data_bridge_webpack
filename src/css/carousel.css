@@ -1,0 +1,94 @@
+
+.image-sliderfade  
+{ 
+  display: none; 
+} 
+  
+img  
+{ 
+  vertical-align: middle;
+  height: 200px;
+  width: 350px;
+  border-radius: 10px;
+  transition: border-color 1.6s ease; 
+} 
+  
+.carousel  
+{ 
+  max-width: 1000px; 
+  position: relative; 
+  margin: auto; 
+} 
+
+li {
+  list-style-type:none;
+}
+  
+.dot  
+{ 
+  height: 5px; 
+  width: 5px; 
+  margin: 0 2px; 
+  background-color: transparent; 
+  border-color: rgb(228 228 218); 
+  border-width: 5 px; 
+  border-style: solid; 
+  border-radius: 50%; 
+  display: inline-block; 
+  transition: border-color 1.6s ease; 
+}
+
+.prev_image {
+  text-decoration: none;
+}
+
+.next_image {
+  text-decoration: none;
+}
+
+.active  
+{ 
+  border-color: rgb(123, 131, 52); 
+}
+  
+.fade  
+{ 
+  margin-left: 0px;
+  -webkit-animation-name: fade-image; 
+  -webkit-animation-duration: 1.5s; 
+  animation-name: fade-image; 
+  animation-duration: 1.5s; 
+} 
+
+.fade.active {
+  display: unset;
+}
+
+.active_dots {
+  margin-top: -20px;
+  margin-left: -30px;
+}
+
+.carousel_slide {
+  color: rgb(136 217 255);
+  float: left;
+  text-decoration: none;
+  transition: background-color .3s;
+  font-size: 40px;
+  border-radius: 5px;
+  position: absolute;
+  margin-top: -125px;
+}
+
+.carousel_slide:hover {
+  color: rgb(136 217 255);
+  font-weight: 700;
+}
+
+.carousel_slide.prev {
+  margin-left: -160px;
+}
+
+.carousel_slide.next {
+  margin-left: 140px;
+}

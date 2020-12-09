@@ -1,0 +1,32 @@
+.header {
+    padding: 3px;
+    text-align: center;
+    background: #789289;
+    color: white;
+    font-size: 20px;
+    margin-top: -10px;
+    border-radius: 10px;
+  }
+
+  .sub_header {
+      margin-top: -20px;
+      color:rgb(213, 247, 150);
+      font-size: 20px;
+  }
+
+  .add_new_post {
+    background-color: #f9ceb0;
+    color: #540844;
+    border: 2px solid #a1b5e0;
+    font-size: 20px;
+    border-radius: 7px;
+    margin-bottom: 10px;
+  }
+
+  .add_new_post:hover {
+    background-color: #ebebeb;
+    color: #7a4d70;
+    border: 2px solid #3b7c39;
+    font-weight: 700;
+  }
+
