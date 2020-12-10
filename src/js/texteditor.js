@@ -21,9 +21,12 @@ import SimpleImage from "@editorjs/simple-image";
 
 // console.log(html);
 
-
+/**
+ * Used for preparing editir.js object for both New and Exitsing post
+ * @param {Data} data Data from existing blogs for updating.
+ */
 export function editor(data) {
-    return new EditorJS({
+    const editorjs = new EditorJS({
         holder: 'editor',
         autofocus: true,
         placeholder: "Let`s write an awesome prompt here!",
@@ -50,18 +53,20 @@ export function editor(data) {
             marker: Marker,
             list: List,
             warning: Warning,
-            code: Code,
+            // code: Code,
             // linkTool: LinkTool,
             // raw: Raw,   
             header: Header,
             quote: Quote,
-            checklist: CheckList,
+            // checklist: CheckList,
             delimiter: Delimiter,
             // inlineCode: InlineCode,
             simpleImage: SimpleImage
         },
         data
     })
+    // if(window?.editorjs) {
+    //     return window.editorjs
+    // }
+    return editorjs
 }
-
-

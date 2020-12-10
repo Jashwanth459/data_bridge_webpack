@@ -1,6 +1,6 @@
-import edjsHTML from "editorjs-html";
-import { editor } from "./texteditor"
- /**
+var modal = document.getElementById("my_modal");
+
+/**
   * Helps in posting data to the data source with specific format
   * @param {Target Event} e 
   */
@@ -42,27 +42,28 @@ const postForm = body => {
 export async function handlePostSubmit(e) {
   e.preventDefault();
   let body
-  editor().save().then((output) => {
-    async function IIFE() {
-      console.log('output', output)
-      body = JSON.stringify(wrapPostData(e, output))
-      console.log('body', body)
-      const res = await postForm(body);
-    }
-    console.log('data', output)
-    IIFE();
-    // const edjsParser = edjsHTML();
-    // const html = edjsParser.parse(output);
-    // var cont = document.getElementById('post_container')
-    // console.log('html', html)
-    // cont.innerHTML = html
-    // alert('Data: ', output);
-  }).catch((error) => {
-    console.log('Saving failed: ', error)
-  });
+  let title_error = document.getElementById("title_error");
+  if(e.target[0].value === '') {
+    title_error.innerText = 'This field is required';
+    return;
+  }
+
+  title_error.innerText = '';
+  modal.style.display = "none"
+    window.editor.save().then((output) => {
+      async function IIFE() {
+        console.log('output', output)
+        body = JSON.stringify(wrapPostData(e, output))
+        console.log('body', body)
+        const res = await postForm(body);
+      }
+      console.log('data', output)
+      IIFE();
+    }).catch((error) => {
+      console.log('Saving failed: ', error)
+    });
   console.log('body', body)
  
-  // const data = await res.json();
   window.dataLength = window.dataLength + 1;
 }
   

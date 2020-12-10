@@ -1,7 +1,6 @@
 import { handleDeletePost, handleEditPost } from './handlePost'
 import { handlePagination } from './pagination';
 import { carouselButtonClick } from './carousel'
-import { handlePostSubmit } from './postRequest';
 
 import edjsHTML from "editorjs-html";
 import './popup.js'
@@ -10,8 +9,7 @@ import './popup.js'
  * it is used for initialsing/ updating content in complete application
  * @param {Page Information} page
  */
-export function render(page)
-{
+export function render(page) {
     document.getElementById('spinner').style = 'display: unset'
     fetch('http://localhost:3000/data', {mode: 'cors'})
     .then((response) => {
@@ -35,14 +33,8 @@ setTimeout(render, 1000)
  * @param {Page Inforamtion} page 
  */
 function prepareHTML(res, page) {
-    // let submitPostButton = document.getElementById('form_popup')
-    // submitPostButton.addEventListener('submit', (event) => {
-    //     handlePostSubmit(event)
-    //   })
     var container = document.getElementById('post_container')
     console.log('container ', container)
-    // container.remove('ul')
-    // container.removeChild()
     var posts_list = document.createElement('ul')
     posts_list.id = 'posts_list'
     posts_list.className = 'posts_list'
@@ -202,7 +194,6 @@ function prepareHTML(res, page) {
 
         listElem.appendChild(divElem)
         posts_list.appendChild(listElem)
-        // posts_list?.parentNode?.removeChild(posts_list)
         if (document.getElementById('post_container').getElementsByClassName('posts_list').length == 0) {
             container.appendChild(posts_list)
         }

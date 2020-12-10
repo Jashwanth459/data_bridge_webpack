@@ -20,28 +20,30 @@ export function handleDeletePost(e) {
  * Handles submit button in the popup
  * @param {event} e - target event of submit button
  */
-export function handleSubmitPost (e) {
+export async function handleSubmitPost (e, editorRef) {
     e.preventDefault();
+    let postTitle = document.getElementById('post_title')
+    let title_error = document.getElementById("title_error");
+    if(postTitle.value == '') {
+        title_error.innerText = 'This field is required';
+        return;
+    }
+    title_error.innerText = 'This field is required';
     if (e.target.id && confirm('Do you really want to update the post..?')) {
         let postTitle = document.getElementById('post_title')
-        // let postDescription = document.getElementById('post_description')
-        alert()
-        editor.save().then((output) => {
-            console.log('inside ourput', output)
-            alert('hello')
-            // fetch(`http://localhost:3000/data/${e.target.id}`, {
-            //     method: "PATCH",
-            //     headers: {
-            //         'Content-Type': 'application/json'
-            //     },
-            //     body: JSON.stringify({
-            //         title: postTitle.value,
-            //         message: JSON.stringify(output)
-            //     })
-            // }).then( () => {
-            //     console.log('common you are there')
-            //     window.open('/', '_self');   
-            // })
+        editorRef.save().then((output) => {
+            fetch(`http://localhost:3000/data/${e.target.id}`, {
+                method: "PATCH",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    title: postTitle.value,
+                    message: JSON.stringify(output)
+                })
+            }).then( () => {
+                window.open('/', '_self');   
+            })
             console.log('hey output', output, e)
             
         }).catch((error) => {
@@ -62,10 +64,8 @@ export function handleEditPost(e) {
     var form_model = document.getElementById('my_modal')
     form_model.style.display = 'unset';
     var inputTitle = document.getElementById(`post_title_${e.target.id}`)
-    var inputMessage = document.getElementById(`post_message_${e.target.id}`)
 
     var postTitle = document.getElementById('post_title')
-    // var postDescription = document.getElementById('post_description')
     var formPopup = document.getElementById('form_popup')
 
     fetch(`http://localhost:3000/data/${e.target.id}`, {mode: 'cors'})
@@ -74,25 +74,15 @@ export function handleEditPost(e) {
     })
     .then((res) => {
         postTitle.value = inputTitle.innerText
-        // postDescription.value = inputMessage.innerText
-        console.log('comeon', formPopup)
-        console.log('josn', res)
         var cleanEditor = document.getElementById('editor');
         cleanEditor.innerHTML = ''
-        editor(JSON.parse(res && res.message))
+        const editorRef = editor(JSON.parse(res && res.message))
         formPopup.onsubmit = function() {
-            handleSubmitPost(e)
+            handleSubmitPost(e, editorRef)
         }
     })
     .catch(function (error) {
         console.log('hey you ended up with error:  ', error);
     })
-
-    // formPopup.onsubmit = null
-    // formPopup.addEventListener("submit", handleSubmitPost)
-    // formPopup.setAttribute('onsubmit', () => {
-    //     handleSubmitPost(e)
-    // })
-    console.log('comeon', formPopup)
 }
 

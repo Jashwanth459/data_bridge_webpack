@@ -17,9 +17,10 @@ import './css/spinner.css'
 import './css/carousel.css'
 import './css/texteditor.css'
 
-// import './assets/dog_1.jpg'
+// Initializing editor.js object
+editor();
+
 // Needed for Hot Module Replacement
-editor(); 
 if(typeof(module.hot) !== 'undefined') {
   module.hot.accept() // eslint-disable-line no-undef  
 }
