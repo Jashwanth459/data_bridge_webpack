@@ -24,36 +24,40 @@ export async function handleSubmitPost (e, editorRef) {
     e.preventDefault();
     let postTitle = document.getElementById('post_title')
     let title_error = document.getElementById("title_error");
-    if(postTitle.value == '') {
+    if(postTitle.value === '') {
         title_error.innerText = 'This field is required';
         return;
-    }
-    title_error.innerText = 'This field is required';
-    if (e.target.id && confirm('Do you really want to update the post..?')) {
-        let postTitle = document.getElementById('post_title')
-        editorRef.save().then((output) => {
-            fetch(`http://localhost:3000/data/${e.target.id}`, {
-                method: "PATCH",
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    title: postTitle.value,
-                    message: JSON.stringify(output)
-                })
-            }).then( () => {
-                window.open('/', '_self');   
-            })
-            console.log('hey output', output, e)
-            
-        }).catch((error) => {
-            console.log('Saving failed: ', error)
-        });
-        console.log('body', body)
     } else {
-        return
+        title_error.innerText = '';
+        if (e.target.id && confirm('Do you really want to update the post..?')) {
+            let postTitle = document.getElementById('post_title')
+            let descriptionError = document.getElementById('description_error');
+            editorRef.save().then((output) => {
+                if (output.blocks.length > 0) {
+                    descriptionError.innerText = '';
+                    fetch(`http://localhost:3000/data/${e.target.id}`, {
+                        method: "PATCH",
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            title: postTitle.value,
+                            message: JSON.stringify(output)
+                        })
+                    }).then( () => {
+                        window.open('/', '_self');   
+                    })
+                    console.log('hey output', output, e)
+                } else {
+                    descriptionError.innerText = 'This field is required.'
+                    return;
+                }
+            }).catch((error) => {
+                console.log('Saving failed: ', error)
+            });
+            // console.log('body', body)
+        }
     }
-    
 }
 
 /**
@@ -77,7 +81,7 @@ export function handleEditPost(e) {
         var cleanEditor = document.getElementById('editor');
         cleanEditor.innerHTML = ''
         const editorRef = editor(JSON.parse(res && res.message))
-        formPopup.onsubmit = function() {
+        formPopup.onsubmit = () => {
             handleSubmitPost(e, editorRef)
         }
     })

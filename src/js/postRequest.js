@@ -43,22 +43,29 @@ export async function handlePostSubmit(e) {
   e.preventDefault();
   let body
   let title_error = document.getElementById("title_error");
+  let description_error = document.getElementById("description_error");
   if(e.target[0].value === '') {
     title_error.innerText = 'This field is required';
     return;
   }
 
   title_error.innerText = '';
-  modal.style.display = "none"
     window.editor.save().then((output) => {
-      async function IIFE() {
-        console.log('output', output)
-        body = JSON.stringify(wrapPostData(e, output))
-        console.log('body', body)
-        const res = await postForm(body);
+      if (output.blocks.length > 0) {
+        async function IIFE() {
+          modal.style.display = "none"
+          console.log('output', output)
+          body = JSON.stringify(wrapPostData(e, output))
+          console.log('body', body)
+          const res = await postForm(body);
+        }
+        IIFE();
+        description_error.innerText = ''
+      } else {
+        description_error.innerText = 'This field is required';
+        throw 'Required fields are missing'
       }
-      console.log('data', output)
-      IIFE();
+      
     }).catch((error) => {
       console.log('Saving failed: ', error)
     });
