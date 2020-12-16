@@ -65,12 +65,12 @@ export async function handleSubmitPost (e, editorRef) {
  * @param {event} e - target event of edit button of the post
  */
 export function handleEditPost(e) {
-    var form_model = document.getElementById('my_modal')
+    let form_model = document.getElementById('my_modal')
     form_model.style.display = 'unset';
-    var inputTitle = document.getElementById(`post_title_${e.target.id}`)
+    let inputTitle = document.getElementById(`post_title_${e.target.id}`)
 
-    var postTitle = document.getElementById('post_title')
-    var formPopup = document.getElementById('form_popup')
+    let postTitle = document.getElementById('post_title')
+    let formPopup = document.getElementById('form_popup')
 
     fetch(`http://localhost:3000/data/${e.target.id}`, {mode: 'cors'})
     .then((response) => {
@@ -78,7 +78,7 @@ export function handleEditPost(e) {
     })
     .then((res) => {
         postTitle.value = inputTitle.innerText
-        var cleanEditor = document.getElementById('editor');
+        let cleanEditor = document.getElementById('editor');
         cleanEditor.innerHTML = ''
         const editorRef = editor(JSON.parse(res && res.message))
         formPopup.onsubmit = () => {

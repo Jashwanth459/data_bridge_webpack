@@ -28,35 +28,30 @@ export function render(page) {
 setTimeout(render, 1000)
 
 /**
- * assists preparing HTML on initilisation, updation
- * @param {Data response from data source} res 
- * @param {Page Inforamtion} page 
+ * Attching appropriate handlers to the pagination buttons
  */
-function prepareHTML(res, page) {
-    var container = document.getElementById('post_container')
-    console.log('container ', container)
-    var posts_list = document.createElement('ul')
-    posts_list.id = 'posts_list'
-    posts_list.className = 'posts_list'
-    document.getElementById('spinner').style = 'display: none'
-    const PAGENUMBER  = page ? Number(page && page[2]) ? page[2] : 4 : 1
-    var dataLength = res.length
-    var recentPosts = res.reverse()
-    window.dataLength = Number(res[0].id)
-
-    var prev_button = document.getElementsByClassName('pagination_prev_button')[0]
-    var next_button = document.getElementsByClassName('pagination_next_button')[0]
+const attachPaginationHandlers = () => {
+    let prev_button = document.getElementsByClassName('pagination_prev_button')[0]
+    let next_button = document.getElementsByClassName('pagination_next_button')[0]
 
     prev_button.addEventListener('click', handlePagination)
     next_button.addEventListener('click', handlePagination)
     
+}
 
-    if(PAGENUMBER*2 <= dataLength && PAGENUMBER*2 > dataLength-1 && PAGENUMBER == 1) {
+/**
+ * 
+ * @param {page_number} page_number PageNumber 
+ * @param {page} page Array with pagination button info for handling pagination
+ * @param {dataLength} dataLength Number of blogs
+ */
+function handlePaginationButtons(page_number, page, dataLength) {
+    if(page_number*2 <= dataLength && page_number*2 > dataLength-1 && page_number == 1) {
         let prev_button = document.getElementById('page_prev')
         prev_button.style = 'background-color: #bbbbbb;'
         let next_button = document.getElementById('page_next_2')
         next_button.style = 'background-color: #bbbbbb;'
-    } else if (PAGENUMBER == 1) {
+    } else if (page_number == 1) {
         if (page && page[2]) {
             let prev_button = document.getElementById(`page_prev_1`)
             prev_button.id = 'page_prev'
@@ -71,7 +66,7 @@ function prepareHTML(res, page) {
             let next_button = document.getElementById('page_next_2')
             next_button.style = 'background-color: #8bc34a;'
         }
-    } else if(PAGENUMBER*2 == dataLength || PAGENUMBER*2 == dataLength+1) {
+    } else if(page_number*2 == dataLength || page_number*2 == dataLength+1) {
     
         let next_button = document.getElementById(`page_next_${page[2]}`)
         let prev_button = page[2] == 2 ? document.getElementById(`page_prev`) : document.getElementById(`page_prev_${Number(page[2])-2}`)
@@ -81,7 +76,7 @@ function prepareHTML(res, page) {
         prev_button.style = 'background-color: #8bc34a;'
     } else if(page[1] == 'next') {
         let prev_button = page[2] == 2 ? document.getElementById(`page_prev`) : document.getElementById(`page_prev_${Number(page[2])-2}`)
-        if(PAGENUMBER*2 == dataLength) {
+        if(page_number*2 == dataLength) {
             let next_button = document.getElementById(`page_next_${page[2]}`)
             next_button.id = 'page_next'
             next_button.style = 'background-color: brown'
@@ -94,103 +89,149 @@ function prepareHTML(res, page) {
         prev_button.style = 'background-color: #8bc34a;'
     }  else if(page[1] == 'prev') {
         let prev_button = document.getElementById(`page_prev_${page[2]}`)
-        let next_button = PAGENUMBER*2 < dataLength && PAGENUMBER*2 >= dataLength-2   ? document.getElementById(`page_next`) : document.getElementById(`page_next_${Number(page[2])+2}`)
+        let next_button = page_number*2 < dataLength && page_number*2 >= dataLength-2   ? document.getElementById(`page_next`) : document.getElementById(`page_next_${Number(page[2])+2}`)
         prev_button.id = `page_prev_${Number(page[2])-1}`
         next_button.id = `page_next_${Number(page[2])+1}`
         prev_button.style = 'background-color: #8bc34a;'
         next_button.style = 'background-color: #8bc34a;'
     }
+}
+
+/**
+ * 
+ * @param {element} element Json element of respective Blog
+ * @param {divElem} divElem div element for holding particular blog html
+ * @param {index} index blog index
+ */
+function handleMediaContent(element, divElem, index) {
+    if (element?.media_content?.length > 0) {
+        let carouselUnorderedList = document.createElement('ul')
+        carouselUnorderedList.id = `carousel_${index+1}`
+        carouselUnorderedList.className = 'carousel'
+        element.media_content.forEach((media_element, media_index) => {
+            let imageListElem = document.createElement('li')
+            imageListElem.className = media_index == 0 ? 'image-sliderfade fade active' : 'image-sliderfade fade'
+
+            let imgTag = document.createElement('img')
+            imgTag.src = media_element
+            imageListElem.appendChild(imgTag)
+            carouselUnorderedList.appendChild(imageListElem)
+        })
+
+        let dots = document.createElement('ul')
+        dots.className = 'active_dots'
+
+        for(let i=0; i<element.media_content.length; i++) {
+            let dotElem = document.createElement('li')
+            dotElem.className = i == 0 ? 'dot active' : 'dot'
+            dots.appendChild(dotElem)
+        }
+
+        carouselUnorderedList.appendChild(dots)
+
+        let prevImg = document.createElement('a')
+        prevImg.className = 'carousel_slide prev'
+        prevImg.id = `prev_${index+1}_1`
+        prevImg.title = 'Previous Image'
+        prevImg.text = '«'
+        prevImg.addEventListener('click', carouselButtonClick)
+
+        let nextImg = document.createElement('a')
+        nextImg.className = 'carousel_slide next'
+        nextImg.id = `next_${index+1}_1`
+        nextImg.title = 'Next Image'
+        nextImg.text = '»'
+        nextImg.addEventListener('click', carouselButtonClick)
+
+        carouselUnorderedList.appendChild(prevImg)
+        carouselUnorderedList.appendChild(nextImg)
+
+        divElem.appendChild(carouselUnorderedList)
+    }
+}
+
+/**
+ * 
+ * @param {div Element} divElem html div node of post to append EDIT and DELETE button 
+ */
+function appendEditAndDeleteButton(divElem, element) {
+    let deleteButton = document.createElement('button')
+    deleteButton.className = 'delete_button'
+    let deleteIcon = document.createElement('i')
+    deleteIcon.className = 'fa fa-trash'
+    deleteIcon.id = element.id
+    deleteButton.appendChild(deleteIcon)
+    deleteButton.id = element.id
+    deleteButton.addEventListener('click', handleDeletePost)
+    let editButton = document.createElement('button')
+    editButton.className = 'edit_button'
+    let editIcon = document.createElement('i')
+    editIcon.className = 'fa fa-edit'
+    editIcon.id = element.id
+    editButton.appendChild(editIcon)
+    editButton.id = element.id
+    editButton.addEventListener('click', handleEditPost)
+    
+    divElem.appendChild(deleteButton)
+    divElem.appendChild(editButton)
+}
+
+const renderPostContent = (divElem, element) => {
+    let postHead = document.createElement('h2')
+    postHead.className = 'post_title'       
+
+    postHead.id = `post_title_${element.id}`
+    postHead.textContent = element?.title || 'Click edit to add Title'
+
+    let postMessage = document.createElement('p')
+    postMessage.className = 'post_message'
+    postMessage.id = `post_message_${element.id}`
+    const edjsParser = edjsHTML();
+    const message_html = element && edjsParser.parse(JSON.parse(element.message));
+    postMessage.innerHTML = message_html || 'Something was wrong, your message is missing... '
+
+    divElem.appendChild(postHead)
+    divElem.appendChild(postMessage)
+}
+
+/**
+ * assists preparing HTML on initilisation, updation
+ * @param {Data response from data source} res 
+ * @param {Page Inforamtion} page 
+ */
+function prepareHTML(res, page) {
+    let container = document.getElementById('post_container')
+    console.log('container ', container)
+    let posts_list = document.createElement('ul')
+    posts_list.id = 'posts_list'
+    posts_list.className = 'posts_list'
+    document.getElementById('spinner').style = 'display: none'
+    const page_number  = page ? Number(page && page[2]) ? page[2] : 4 : 1
+    let dataLength = res.length
+    let recentPosts = res.reverse()
+    window.dataLength = Number(res[0].id)
+
+    // Invoking attachPaginationHandlers
+    attachPaginationHandlers()
+    // Invoking handlePaginationButtons function
+    handlePaginationButtons(page_number, page, dataLength)
 
     // Rendeting posts based on the page upon page initialisation or using pagination
-    for (let index=(PAGENUMBER-1)*2; index<=PAGENUMBER*2-1 && index<res.length;index++) {
+    for (let index=(page_number-1)*2; index<=page_number*2-1 && index<res.length;index++) {
         let element = recentPosts[index]
         let listElem = document.createElement('li')
         listElem.className = 'post_card'
         listElem.id = `post_${index+1}`
         let divElem = document.createElement('div')
 
-        if (element?.media_content?.length > 0) {
-            let carouselUnorderedList = document.createElement('ul')
-            carouselUnorderedList.id = `carousel_${index+1}`
-            carouselUnorderedList.className = 'carousel'
-            element.media_content.forEach((media_element, media_index) => {
-                let imageListElem = document.createElement('li')
-                imageListElem.className = media_index == 0 ? 'image-sliderfade fade active' : 'image-sliderfade fade'
+        // Invoking mediaContent function if media content presents
+        handleMediaContent(element, divElem, index)
 
-                let imgTag = document.createElement('img')
-                imgTag.src = media_element
-                imageListElem.appendChild(imgTag)
-                carouselUnorderedList.appendChild(imageListElem)
-            })
+        // Method for appending Edit and Delete Nodes
+        appendEditAndDeleteButton(divElem, element)
 
-            let dots = document.createElement('ul')
-            dots.className = 'active_dots'
-
-            for(let i=0; i<element.media_content.length; i++) {
-                let dotElem = document.createElement('li')
-                dotElem.className = i == 0 ? 'dot active' : 'dot'
-                dots.appendChild(dotElem)
-            }
-
-            carouselUnorderedList.appendChild(dots)
-
-            let prevImg = document.createElement('a')
-            prevImg.className = 'carousel_slide prev'
-            prevImg.id = `prev_${index+1}_1`
-            prevImg.title = 'Previous Image'
-            prevImg.text = '«'
-            prevImg.addEventListener('click', carouselButtonClick)
-
-            let nextImg = document.createElement('a')
-            nextImg.className = 'carousel_slide next'
-            nextImg.id = `next_${index+1}_1`
-            nextImg.title = 'Next Image'
-            nextImg.text = '»'
-            nextImg.addEventListener('click', carouselButtonClick)
-
-            carouselUnorderedList.appendChild(prevImg)
-            carouselUnorderedList.appendChild(nextImg)
-
-            divElem.appendChild(carouselUnorderedList)
-        }
-
-        var deleteButton = document.createElement('button')
-        deleteButton.className = 'delete_button'
-        var deleteIcon = document.createElement('i')
-        deleteIcon.className = 'fa fa-trash'
-        deleteIcon.id = element.id
-        deleteButton.appendChild(deleteIcon)
-        deleteButton.id = element.id
-        deleteButton.addEventListener('click', handleDeletePost)
-
-        var editButton = document.createElement('button')
-        editButton.className = 'edit_button'
-        var editIcon = document.createElement('i')
-        editIcon.className = 'fa fa-edit'
-        editIcon.id = element.id
-        editButton.appendChild(editIcon)
-        editButton.id = element.id
-        editButton.addEventListener('click', handleEditPost)
-        
-        divElem.appendChild(deleteButton)
-        divElem.appendChild(editButton)
-
-        var postHead = document.createElement('h2')
-        postHead.className = 'post_title'       
-
-        postHead.id = `post_title_${element.id}`
-        postHead.textContent = element?.title || 'Click edit to add Title'
-
-        var postMessage = document.createElement('p')
-        postMessage.className = 'post_message'
-        postMessage.id = `post_message_${element.id}`
-        const edjsParser = edjsHTML();
-        console.log('element', element)
-        const message_html = element && edjsParser.parse(JSON.parse(element.message));
-        postMessage.innerHTML = message_html || 'Something was wrong, your message is missing... '
-
-        divElem.appendChild(postHead)
-        divElem.appendChild(postMessage)
+        // Rendering Head and Description of post
+        renderPostContent(divElem, element)
 
         listElem.appendChild(divElem)
         posts_list.appendChild(listElem)

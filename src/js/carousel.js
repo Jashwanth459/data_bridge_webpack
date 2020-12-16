@@ -3,13 +3,13 @@
  * @param {event} e Target event upon clicking next/previous button in the carousel
  */
 export function carouselButtonClick(e) {
-    const OPPOSITEMATCHING = {next: 'prev', prev: 'next'}
-    var carouselButton = document.getElementById(e.target.id);
-    var tracking_id = e.target.id.split('_')
-    var carousel_id = `carousel_${tracking_id[1]}`
-    var carouselImages  = document.getElementById(carousel_id)
-    var carouselImagesList = carouselImages.getElementsByClassName('image-sliderfade')
-    var dots = carouselImages.getElementsByClassName('dot')
+    const OPPOSITE_MATCHING = {next: 'prev', prev: 'next'}
+    let carouselButton = document.getElementById(e.target.id);
+    let tracking_id = e.target.id.split('_')
+    let carousel_id = `carousel_${tracking_id[1]}`
+    let carouselImages  = document.getElementById(carousel_id)
+    let carouselImagesList = carouselImages.getElementsByClassName('image-sliderfade')
+    let dots = carouselImages.getElementsByClassName('dot')
     carouselImagesList[tracking_id[2]-1].className = 'image-sliderfade fade'
     dots[tracking_id[2]-1].className = 'dot'
 

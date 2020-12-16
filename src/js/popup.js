@@ -1,25 +1,39 @@
+import { handleSubmitPost } from './handlePost';
 import { handlePostSubmit } from './postRequest'
 import { editor } from './texteditor'
 
-var modal = document.getElementById("my_modal");
-var btn = document.getElementById("add_new_post");
-var span = document.getElementsByClassName("close")[0];
-var formPopup = document.getElementById('form_popup')
-var postTitle = document.getElementById('post_title')
-var postDescription = document.getElementById('post_description')
+let modal = document.getElementById("my_modal");
+let btn = document.getElementById("add_new_post");
+let span = document.getElementsByClassName("close")[0];
+let formPopup = document.getElementById('form_popup')
+let postTitle = document.getElementById('post_title')
+let postDescription = document.getElementById('post_description')
+let editButton = document.getElementById('edit_button')
 
+const resetErrorMessages = () => {
+  let title_error = document.getElementById("title_error");
+  let description_error = document.getElementById("description_error");
+  title_error.innerText = ''
+  description_error.innerText = ''
+}
+
+// editButton.onclick = function() {
+//   formPopup.addEventListener('submit', (event) => {
+//     handleSubmitPost(event)
+//   })
+// }
 btn.onclick = function() {
   modal.style.display = "block";
   formPopup.addEventListener('submit', (event) => {
     handlePostSubmit(event)
   })
+  resetErrorMessages()
   let post_title = document.getElementById("post_title");
   post_title.addEventListener('change', handleInputChange)
-  var editorClean = document.getElementById('editor');
+  let editorClean = document.getElementById('editor');
   postTitle.value = `What's Up`
   editorClean.innerHTML = ''
   window.editor = editor();
-  console.log('my_modal come on ', modal)
 }
 
 span.onclick = function() {

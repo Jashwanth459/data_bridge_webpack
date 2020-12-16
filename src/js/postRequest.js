@@ -1,4 +1,4 @@
-var modal = document.getElementById("my_modal");
+let modal = document.getElementById("my_modal");
 
 /**
   * Helps in posting data to the data source with specific format
@@ -44,25 +44,34 @@ export async function handlePostSubmit(e) {
   let body
   let title_error = document.getElementById("title_error");
   let description_error = document.getElementById("description_error");
-  if(e.target[0].value === '') {
-    title_error.innerText = 'This field is required';
-    return;
-  }
+  // if(e.target[0].value === '') {
+  //   title_error.innerText = 'This field is required';
+  //   return;
+  // }
 
   title_error.innerText = '';
     window.editor.save().then((output) => {
-      if (output.blocks.length > 0) {
-        async function IIFE() {
+      if (output.blocks.length > 0 && e.target[0].value !== '') {
+        (async function() {
           modal.style.display = "none"
           console.log('output', output)
           body = JSON.stringify(wrapPostData(e, output))
           console.log('body', body)
           const res = await postForm(body);
-        }
-        IIFE();
+        })();
         description_error.innerText = ''
+        title_error.innerText = ''
+      } else if (output.blocks.length <= 0 && e.target[0].value !== '') {
+        description_error.innerText = 'This field is required'
+        title_error.innerText = ''
+        throw 'Required fields are missing'
+      } else if (output.blocks.length > 0 && e.target[0].value == '') {
+        description_error.innerText = ''
+        title_error.innerText = 'This field is required'
+        throw 'Required fields are missing'
       } else {
-        description_error.innerText = 'This field is required';
+        description_error.innerText = 'This field is required'
+        title_error.innerText = 'This field is required'
         throw 'Required fields are missing'
       }
       
