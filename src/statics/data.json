@@ -26,14 +26,6 @@
       ],
       "created_time": "2010-08-02T21:27:44+0000",
       "updated_time": "2010-08-02T21:27:44+0000"
-    },
-    {
-      "id": "7",
-      "title": "What's Up",
-      "message": "{\"time\":1608183567339,\"blocks\":[{\"type\":\"paragraph\",\"data\":{\"text\":\"dassHey there\"}}],\"version\":\"2.19.0\"}",
-      "type": "post",
-      "created_time": "2010-08-02T21:27:44+0000",
-      "updated_time": "2010-08-02T21:27:44+0000"
     }
   ]
 }

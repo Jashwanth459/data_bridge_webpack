@@ -651,7 +651,7 @@ function render(page) {
   });
 } // Initialising functionality when application starts
 
-setTimeout(render, 1000);
+setTimeout(render, 200);
 /**
  * Attching appropriate handlers to the pagination buttons
  */
@@ -960,12 +960,14 @@ btn.onclick = function () {
 
 span.onclick = function () {
   modal.style.display = "none";
+  window.open('/', '_self');
 }; // Hide Popup upon hitting ESC button in the keyboard
 
 
 window.onkeydown = function (event) {
   if (event.keyCode == 27) {
     modal.style.display = "none";
+    window.open('/', '_self');
   }
 
   ;
@@ -974,6 +976,7 @@ window.onkeydown = function (event) {
 window.onclick = function (event) {
   if (event.target == modal) {
     modal.style.display = "none";
+    window.open('/', '_self');
   }
 }; // handles Input change
 
@@ -1063,20 +1066,22 @@ async function handlePostSubmit(e) {
     } else if (output.blocks.length <= 0 && e.target[0].value !== '') {
       descriptionError.innerText = 'This field is required';
       titleError.innerText = '';
+      return;
       throw 'Required fields are missing';
     } else if (output.blocks.length > 0 && e.target[0].value == '') {
       descriptionError.innerText = '';
       titleError.innerText = 'This field is required';
+      return;
       throw 'Required fields are missing';
     } else {
       descriptionError.innerText = 'This field is required';
       titleError.innerText = 'This field is required';
+      return;
       throw 'Required fields are missing';
     }
   }).catch(error => {
     console.log('Saving failed: ', error);
   });
-  console.log('body', body);
   window.dataLength = window.dataLength + 1;
 }
 
@@ -4024,7 +4029,7 @@ module.exports = function(hash, moduleMap, options) {
 /******/ 	
 /******/ 	/* webpack/runtime/getFullHash */
 /******/ 	(() => {
-/******/ 		__webpack_require__.h = () => "bf1673070d18cdcc0dc5"
+/******/ 		__webpack_require__.h = () => "79666bed4ced0b0b399a"
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
