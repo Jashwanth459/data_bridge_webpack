@@ -25,85 +25,85 @@ export function render(page) {
     })
 }
 // Initialising functionality when application starts
-setTimeout(render, 1000)
+setTimeout(render, 200)
 
 /**
  * Attching appropriate handlers to the pagination buttons
  */
 const attachPaginationHandlers = () => {
-    let prev_button = document.getElementsByClassName('pagination_prev_button')[0]
-    let next_button = document.getElementsByClassName('pagination_next_button')[0]
+    let prevButton = document.getElementsByClassName('pagination_prev_button')[0]
+    let nextButton = document.getElementsByClassName('pagination_next_button')[0]
 
-    prev_button.addEventListener('click', handlePagination)
-    next_button.addEventListener('click', handlePagination)
+    prevButton.addEventListener('click', handlePagination)
+    nextButton.addEventListener('click', handlePagination)
     
 }
 
 /**
- * 
+ * Handles paginaion button by enabling or disabling them
  * @param {page_number} page_number PageNumber 
  * @param {page} page Array with pagination button info for handling pagination
  * @param {dataLength} dataLength Number of blogs
  */
-function handlePaginationButtons(page_number, page, dataLength) {
+const handlePaginationButtons = (page_number, page, dataLength) => {
     if(page_number*2 <= dataLength && page_number*2 > dataLength-1 && page_number == 1) {
-        let prev_button = document.getElementById('page_prev')
-        prev_button.style = 'background-color: #bbbbbb;'
-        let next_button = document.getElementById('page_next_2')
-        next_button.style = 'background-color: #bbbbbb;'
+        let prevButton = document.getElementById('page_prev')
+        prevButton.style = 'background-color: #bbbbbb;'
+        let nextButton = document.getElementById('page_next_2')
+        nextButton.style = 'background-color: #bbbbbb;'
     } else if (page_number == 1) {
         if (page && page[2]) {
-            let prev_button = document.getElementById(`page_prev_1`)
-            prev_button.id = 'page_prev'
-            let next_button = dataLength == 4 || dataLength == 3 ? document.getElementById('page_next') : document.getElementById('page_next_3')
-            next_button.id = `page_next_2`
-            next_button.style = 'background-color: #8bc34a;'
-            prev_button.style = 'background-color: #bbbbbb;'
+            let prevButton = document.getElementById(`page_prev_1`)
+            prevButton.id = 'page_prev'
+            let nextButton = dataLength == 4 || dataLength == 3 ? document.getElementById('page_next') : document.getElementById('page_next_3')
+            nextButton.id = `page_next_2`
+            nextButton.style = 'background-color: #8bc34a;'
+            prevButton.style = 'background-color: #bbbbbb;'
 
         } else {
             let button = document.getElementById('page_prev')
             button.style = 'background-color: #bbbbbb;'
-            let next_button = document.getElementById('page_next_2')
-            next_button.style = 'background-color: #8bc34a;'
+            let nextButton = document.getElementById('page_next_2')
+            nextButton.style = 'background-color: #8bc34a;'
         }
     } else if(page_number*2 == dataLength || page_number*2 == dataLength+1) {
     
-        let next_button = document.getElementById(`page_next_${page[2]}`)
-        let prev_button = page[2] == 2 ? document.getElementById(`page_prev`) : document.getElementById(`page_prev_${Number(page[2])-2}`)
-        prev_button.id = `page_prev_${Number(page[2])-1}`
-        next_button.id = 'page_next'
-        next_button.style = 'background-color: #bbbbbb;'
-        prev_button.style = 'background-color: #8bc34a;'
+        let nextButton = document.getElementById(`page_next_${page[2]}`)
+        let prevButton = page[2] == 2 ? document.getElementById(`page_prev`) : document.getElementById(`page_prev_${Number(page[2])-2}`)
+        prevButton.id = `page_prev_${Number(page[2])-1}`
+        nextButton.id = 'page_next'
+        nextButton.style = 'background-color: #bbbbbb;'
+        prevButton.style = 'background-color: #8bc34a;'
     } else if(page[1] == 'next') {
-        let prev_button = page[2] == 2 ? document.getElementById(`page_prev`) : document.getElementById(`page_prev_${Number(page[2])-2}`)
+        let prevButton = page[2] == 2 ? document.getElementById(`page_prev`) : document.getElementById(`page_prev_${Number(page[2])-2}`)
         if(page_number*2 == dataLength) {
-            let next_button = document.getElementById(`page_next_${page[2]}`)
-            next_button.id = 'page_next'
-            next_button.style = 'background-color: brown'
+            let nextButton = document.getElementById(`page_next_${page[2]}`)
+            nextButton.id = 'page_next'
+            nextButton.style = 'background-color: brown'
         } else {
-            let next_button = document.getElementById(`page_next_${page[2]}`)
-            next_button.id = `page_next_${Number(page[2])+1}`
-            next_button.style = 'background-color: #8bc34a;'
+            let nextButton = document.getElementById(`page_next_${page[2]}`)
+            nextButton.id = `page_next_${Number(page[2])+1}`
+            nextButton.style = 'background-color: #8bc34a;'
         }
-        prev_button.id = `page_prev_${Number(page[2])-1}`
-        prev_button.style = 'background-color: #8bc34a;'
+        prevButton.id = `page_prev_${Number(page[2])-1}`
+        prevButton.style = 'background-color: #8bc34a;'
     }  else if(page[1] == 'prev') {
-        let prev_button = document.getElementById(`page_prev_${page[2]}`)
-        let next_button = page_number*2 < dataLength && page_number*2 >= dataLength-2   ? document.getElementById(`page_next`) : document.getElementById(`page_next_${Number(page[2])+2}`)
-        prev_button.id = `page_prev_${Number(page[2])-1}`
-        next_button.id = `page_next_${Number(page[2])+1}`
-        prev_button.style = 'background-color: #8bc34a;'
-        next_button.style = 'background-color: #8bc34a;'
+        let prevButton = document.getElementById(`page_prev_${page[2]}`)
+        let nextButton = page_number*2 < dataLength && page_number*2 >= dataLength-2   ? document.getElementById(`page_next`) : document.getElementById(`page_next_${Number(page[2])+2}`)
+        prevButton.id = `page_prev_${Number(page[2])-1}`
+        nextButton.id = `page_next_${Number(page[2])+1}`
+        prevButton.style = 'background-color: #8bc34a;'
+        nextButton.style = 'background-color: #8bc34a;'
     }
 }
 
 /**
- * 
+ * Handles media content, for now images in the post if present
  * @param {element} element Json element of respective Blog
  * @param {divElem} divElem div element for holding particular blog html
  * @param {index} index blog index
  */
-function handleMediaContent(element, divElem, index) {
+const handleMediaContent = (element, divElem, index) => {
     if (element?.media_content?.length > 0) {
         let carouselUnorderedList = document.createElement('ul')
         carouselUnorderedList.id = `carousel_${index+1}`
@@ -151,10 +151,10 @@ function handleMediaContent(element, divElem, index) {
 }
 
 /**
- * 
+ * appends Edit or Delete button for post in the page
  * @param {div Element} divElem html div node of post to append EDIT and DELETE button 
  */
-function appendEditAndDeleteButton(divElem, element) {
+const appendEditAndDeleteButton = (divElem, element) => {
     let deleteButton = document.createElement('button')
     deleteButton.className = 'delete_button'
     let deleteIcon = document.createElement('i')
@@ -176,6 +176,11 @@ function appendEditAndDeleteButton(divElem, element) {
     divElem.appendChild(editButton)
 }
 
+/**
+ * renders post Content
+ * @param {div element} divElem div element of individual post
+ * @param {element} element post in the form of JSON object
+ */
 const renderPostContent = (divElem, element) => {
     let postHead = document.createElement('h2')
     postHead.className = 'post_title'       

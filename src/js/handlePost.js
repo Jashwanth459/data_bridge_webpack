@@ -23,12 +23,12 @@ export function handleDeletePost(e) {
 export async function handleSubmitPost (e, editorRef) {
     e.preventDefault();
     let postTitle = document.getElementById('post_title')
-    let title_error = document.getElementById("title_error");
+    let titleError = document.getElementById("title_error");
     if(postTitle.value === '') {
-        title_error.innerText = 'This field is required';
+        titleError.innerText = 'This field is required';
         return;
     } else {
-        title_error.innerText = '';
+        titleError.innerText = '';
         if (e.target.id && confirm('Do you really want to update the post..?')) {
             let postTitle = document.getElementById('post_title')
             let descriptionError = document.getElementById('description_error');
@@ -65,8 +65,8 @@ export async function handleSubmitPost (e, editorRef) {
  * @param {event} e - target event of edit button of the post
  */
 export function handleEditPost(e) {
-    let form_model = document.getElementById('my_modal')
-    form_model.style.display = 'unset';
+    let formModel = document.getElementById('my_modal')
+    formModel.style.display = 'unset';
     let inputTitle = document.getElementById(`post_title_${e.target.id}`)
 
     let postTitle = document.getElementById('post_title')

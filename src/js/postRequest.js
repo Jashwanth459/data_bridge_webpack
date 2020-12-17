@@ -42,14 +42,14 @@ const postForm = body => {
 export async function handlePostSubmit(e) {
   e.preventDefault();
   let body
-  let title_error = document.getElementById("title_error");
-  let description_error = document.getElementById("description_error");
+  let titleError = document.getElementById("title_error");
+  let descriptionError = document.getElementById("description_error");
   // if(e.target[0].value === '') {
-  //   title_error.innerText = 'This field is required';
+  //   titleError.innerText = 'This field is required';
   //   return;
   // }
 
-  title_error.innerText = '';
+  titleError.innerText = '';
     window.editor.save().then((output) => {
       if (output.blocks.length > 0 && e.target[0].value !== '') {
         (async function() {
@@ -59,26 +59,28 @@ export async function handlePostSubmit(e) {
           console.log('body', body)
           const res = await postForm(body);
         })();
-        description_error.innerText = ''
-        title_error.innerText = ''
+        descriptionError.innerText = ''
+        titleError.innerText = ''
       } else if (output.blocks.length <= 0 && e.target[0].value !== '') {
-        description_error.innerText = 'This field is required'
-        title_error.innerText = ''
+        descriptionError.innerText = 'This field is required'
+        titleError.innerText = ''
+        return
         throw 'Required fields are missing'
       } else if (output.blocks.length > 0 && e.target[0].value == '') {
-        description_error.innerText = ''
-        title_error.innerText = 'This field is required'
+        descriptionError.innerText = ''
+        titleError.innerText = 'This field is required'
+        return
         throw 'Required fields are missing'
       } else {
-        description_error.innerText = 'This field is required'
-        title_error.innerText = 'This field is required'
+        descriptionError.innerText = 'This field is required'
+        titleError.innerText = 'This field is required'
+        return
         throw 'Required fields are missing'
       }
       
     }).catch((error) => {
       console.log('Saving failed: ', error)
     });
-  console.log('body', body)
  
   window.dataLength = window.dataLength + 1;
 }

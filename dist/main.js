@@ -449,53 +449,53 @@ __webpack_require__.r(__webpack_exports__);
  * @param {event} e Target event upon clicking next/previous button in the carousel
  */
 function carouselButtonClick(e) {
-  const OPPOSITE_MATCHING = {
+  const oppositeMatching = {
     next: 'prev',
     prev: 'next'
   };
   let carouselButton = document.getElementById(e.target.id);
-  let tracking_id = e.target.id.split('_');
-  let carousel_id = `carousel_${tracking_id[1]}`;
-  let carouselImages = document.getElementById(carousel_id);
+  let trackingId = e.target.id.split('_');
+  let carouselId = `carousel_${trackingId[1]}`;
+  let carouselImages = document.getElementById(carouselId);
   let carouselImagesList = carouselImages.getElementsByClassName('image-sliderfade');
   let dots = carouselImages.getElementsByClassName('dot');
-  carouselImagesList[tracking_id[2] - 1].className = 'image-sliderfade fade';
-  dots[tracking_id[2] - 1].className = 'dot'; // Handles Carousel Previous click
+  carouselImagesList[trackingId[2] - 1].className = 'image-sliderfade fade';
+  dots[trackingId[2] - 1].className = 'dot'; // Handles Carousel Previous click
 
-  if (tracking_id[0] === 'prev') {
-    let nextCarouselbutton = document.getElementById(`${OPPOSITEMATCHING[tracking_id[0]]}_${tracking_id[1]}_${tracking_id[2]}`);
+  if (trackingId[0] === 'prev') {
+    let nextCarouselbutton = document.getElementById(`${oppositeMatching[trackingId[0]]}_${trackingId[1]}_${trackingId[2]}`);
 
-    if (tracking_id[2] == 1) {
+    if (trackingId[2] == 1) {
       carouselImages.getElementsByClassName('image-sliderfade')[carouselImagesList.length - 1].className = 'image-sliderfade fade active';
       dots[carouselImagesList.length - 1].className = 'dot active';
-      tracking_id[2] = carouselImagesList.length;
-      nextCarouselbutton.id = `next_${tracking_id[1]}_${tracking_id[2]}`;
-      carouselButton.id = `prev_${tracking_id[1]}_${tracking_id[2]}`;
+      trackingId[2] = carouselImagesList.length;
+      nextCarouselbutton.id = `next_${trackingId[1]}_${trackingId[2]}`;
+      carouselButton.id = `prev_${trackingId[1]}_${trackingId[2]}`;
     } else {
-      carouselImages.getElementsByClassName('image-sliderfade')[tracking_id[2] - 2].className = 'image-sliderfade fade active';
-      dots[tracking_id[2] - 2].className = 'dot active';
-      tracking_id[2] = tracking_id[2] - 1;
-      nextCarouselbutton.id = `next_${tracking_id[1]}_${tracking_id[2]}`;
-      carouselButton.id = `prev_${tracking_id[1]}_${tracking_id[2]}`;
+      carouselImages.getElementsByClassName('image-sliderfade')[trackingId[2] - 2].className = 'image-sliderfade fade active';
+      dots[trackingId[2] - 2].className = 'dot active';
+      trackingId[2] = trackingId[2] - 1;
+      nextCarouselbutton.id = `next_${trackingId[1]}_${trackingId[2]}`;
+      carouselButton.id = `prev_${trackingId[1]}_${trackingId[2]}`;
     }
   } // Handles Carousel Next button click
 
 
-  if (tracking_id[0] === 'next') {
-    let prevCarouselbutton = document.getElementById(`prev_${tracking_id[1]}_${tracking_id[2]}`);
+  if (trackingId[0] === 'next') {
+    let prevCarouselbutton = document.getElementById(`prev_${trackingId[1]}_${trackingId[2]}`);
 
-    if (carouselImagesList.length == tracking_id[2]) {
+    if (carouselImagesList.length == trackingId[2]) {
       carouselImages.getElementsByClassName('image-sliderfade')[0].className = 'image-sliderfade fade active';
       dots[0].className = 'dot active';
-      tracking_id[2] = 1;
-      prevCarouselbutton.id = `prev_${tracking_id[1]}_1`;
-      carouselButton.id = `next_${tracking_id[1]}_1`;
+      trackingId[2] = 1;
+      prevCarouselbutton.id = `prev_${trackingId[1]}_1`;
+      carouselButton.id = `next_${trackingId[1]}_1`;
     } else {
-      carouselImages.getElementsByClassName('image-sliderfade')[tracking_id[2]].className = 'image-sliderfade fade active';
-      dots[tracking_id[2]].className = 'dot active';
-      tracking_id[2] = Number(tracking_id[2]) + 1;
-      prevCarouselbutton.id = `prev_${tracking_id[1]}_${tracking_id[2]}`;
-      carouselButton.id = `next_${tracking_id[1]}_${tracking_id[2]}`;
+      carouselImages.getElementsByClassName('image-sliderfade')[trackingId[2]].className = 'image-sliderfade fade active';
+      dots[trackingId[2]].className = 'dot active';
+      trackingId[2] = Number(trackingId[2]) + 1;
+      prevCarouselbutton.id = `prev_${trackingId[1]}_${trackingId[2]}`;
+      carouselButton.id = `next_${trackingId[1]}_${trackingId[2]}`;
     }
   }
 }
@@ -541,48 +541,42 @@ function handleDeletePost(e) {
 async function handleSubmitPost(e, editorRef) {
   e.preventDefault();
   let postTitle = document.getElementById('post_title');
-  let title_error = document.getElementById("title_error");
-  let description_error = document.getElementById("description_error"); // if(postTitle.value === '') {
-  //     title_error.innerText = 'This field is required';
-  //     return;
-  // } else {
+  let titleError = document.getElementById("title_error");
 
-  editorRef.save().then(output => {
-    console.log(output, e.target[0].value);
-    alert(output.blocks.length);
+  if (postTitle.value === '') {
+    titleError.innerText = 'This field is required';
+    return;
+  } else {
+    titleError.innerText = '';
 
-    if (output.blocks.length > 0 && e.target[0].value !== '') {
-      if (e.target.id && confirm('Do you really want to update the post..?')) {
-        fetch(`http://localhost:3000/data/${e.target.id}`, {
-          method: "PATCH",
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            title: postTitle.value,
-            message: JSON.stringify(output)
-          })
-        }).then(() => {// window.open('/', '_self');   
-        });
-        title_error.innerText = '';
-        description_error.innerText = '';
-      }
-    } else if (output.blocks.length <= 0 && e.target[0].value == '') {
-      description_error.innerText = 'This field is required';
-      title_error.innerText = '';
-      throw 'Required fields are missing';
-    } else if (output.blocks.length > 0 && e.target[0].value == '') {
-      description_error.innerText = '';
-      title_error.innerText = 'This field is required';
-      throw 'Required fields are missing';
-    } else {
-      description_error.innerText = 'This field is required';
-      title_error.innerText = 'This field is required';
-      throw 'Required fields are missing';
+    if (e.target.id && confirm('Do you really want to update the post..?')) {
+      let postTitle = document.getElementById('post_title');
+      let descriptionError = document.getElementById('description_error');
+      editorRef.save().then(output => {
+        if (output.blocks.length > 0) {
+          descriptionError.innerText = '';
+          fetch(`http://localhost:3000/data/${e.target.id}`, {
+            method: "PATCH",
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              title: postTitle.value,
+              message: JSON.stringify(output)
+            })
+          }).then(() => {
+            window.open('/', '_self');
+          });
+          console.log('hey output', output, e);
+        } else {
+          descriptionError.innerText = 'This field is required.';
+          return;
+        }
+      }).catch(error => {
+        console.log('Saving failed: ', error);
+      }); // console.log('body', body)
     }
-  }).catch(error => {
-    console.log('Saving failed: ', error);
-  });
+  }
 }
 /**
  *  handles Edit post functionality
@@ -590,8 +584,8 @@ async function handleSubmitPost(e, editorRef) {
  */
 
 function handleEditPost(e) {
-  let form_model = document.getElementById('my_modal');
-  form_model.style.display = 'unset';
+  let formModel = document.getElementById('my_modal');
+  formModel.style.display = 'unset';
   let inputTitle = document.getElementById(`post_title_${e.target.id}`);
   let postTitle = document.getElementById('post_title');
   let formPopup = document.getElementById('form_popup');
@@ -603,17 +597,13 @@ function handleEditPost(e) {
     postTitle.value = inputTitle.innerText;
     let cleanEditor = document.getElementById('editor');
     cleanEditor.innerHTML = '';
-    const editorRef = (0,_texteditor__WEBPACK_IMPORTED_MODULE_0__.editor)(JSON.parse(res && res.message)); // formPopup.addEventListener('submit', (event) => {
-    //     handleSubmitPost(event, editorRef)
-    // })
+    const editorRef = (0,_texteditor__WEBPACK_IMPORTED_MODULE_0__.editor)(JSON.parse(res && res.message));
 
     formPopup.onsubmit = () => {
       handleSubmitPost(e, editorRef);
     };
-
-    console.log(formPopup);
   }).catch(function (error) {
-    console.log('hey you ended up with an error:  ', error);
+    console.log('hey you ended up with error:  ', error);
   });
 }
 
@@ -667,79 +657,79 @@ setTimeout(render, 1000);
  */
 
 const attachPaginationHandlers = () => {
-  let prev_button = document.getElementsByClassName('pagination_prev_button')[0];
-  let next_button = document.getElementsByClassName('pagination_next_button')[0];
-  prev_button.addEventListener('click', _pagination__WEBPACK_IMPORTED_MODULE_1__.handlePagination);
-  next_button.addEventListener('click', _pagination__WEBPACK_IMPORTED_MODULE_1__.handlePagination);
+  let prevButton = document.getElementsByClassName('pagination_prev_button')[0];
+  let nextButton = document.getElementsByClassName('pagination_next_button')[0];
+  prevButton.addEventListener('click', _pagination__WEBPACK_IMPORTED_MODULE_1__.handlePagination);
+  nextButton.addEventListener('click', _pagination__WEBPACK_IMPORTED_MODULE_1__.handlePagination);
 };
 /**
- * 
+ * Handles paginaion button by enabling or disabling them
  * @param {page_number} page_number PageNumber 
  * @param {page} page Array with pagination button info for handling pagination
  * @param {dataLength} dataLength Number of blogs
  */
 
 
-function handlePaginationButtons(page_number, page, dataLength) {
+const handlePaginationButtons = (page_number, page, dataLength) => {
   if (page_number * 2 <= dataLength && page_number * 2 > dataLength - 1 && page_number == 1) {
-    let prev_button = document.getElementById('page_prev');
-    prev_button.style = 'background-color: #bbbbbb;';
-    let next_button = document.getElementById('page_next_2');
-    next_button.style = 'background-color: #bbbbbb;';
+    let prevButton = document.getElementById('page_prev');
+    prevButton.style = 'background-color: #bbbbbb;';
+    let nextButton = document.getElementById('page_next_2');
+    nextButton.style = 'background-color: #bbbbbb;';
   } else if (page_number == 1) {
     if (page && page[2]) {
-      let prev_button = document.getElementById(`page_prev_1`);
-      prev_button.id = 'page_prev';
-      let next_button = dataLength == 4 || dataLength == 3 ? document.getElementById('page_next') : document.getElementById('page_next_3');
-      next_button.id = `page_next_2`;
-      next_button.style = 'background-color: #8bc34a;';
-      prev_button.style = 'background-color: #bbbbbb;';
+      let prevButton = document.getElementById(`page_prev_1`);
+      prevButton.id = 'page_prev';
+      let nextButton = dataLength == 4 || dataLength == 3 ? document.getElementById('page_next') : document.getElementById('page_next_3');
+      nextButton.id = `page_next_2`;
+      nextButton.style = 'background-color: #8bc34a;';
+      prevButton.style = 'background-color: #bbbbbb;';
     } else {
       let button = document.getElementById('page_prev');
       button.style = 'background-color: #bbbbbb;';
-      let next_button = document.getElementById('page_next_2');
-      next_button.style = 'background-color: #8bc34a;';
+      let nextButton = document.getElementById('page_next_2');
+      nextButton.style = 'background-color: #8bc34a;';
     }
   } else if (page_number * 2 == dataLength || page_number * 2 == dataLength + 1) {
-    let next_button = document.getElementById(`page_next_${page[2]}`);
-    let prev_button = page[2] == 2 ? document.getElementById(`page_prev`) : document.getElementById(`page_prev_${Number(page[2]) - 2}`);
-    prev_button.id = `page_prev_${Number(page[2]) - 1}`;
-    next_button.id = 'page_next';
-    next_button.style = 'background-color: #bbbbbb;';
-    prev_button.style = 'background-color: #8bc34a;';
+    let nextButton = document.getElementById(`page_next_${page[2]}`);
+    let prevButton = page[2] == 2 ? document.getElementById(`page_prev`) : document.getElementById(`page_prev_${Number(page[2]) - 2}`);
+    prevButton.id = `page_prev_${Number(page[2]) - 1}`;
+    nextButton.id = 'page_next';
+    nextButton.style = 'background-color: #bbbbbb;';
+    prevButton.style = 'background-color: #8bc34a;';
   } else if (page[1] == 'next') {
-    let prev_button = page[2] == 2 ? document.getElementById(`page_prev`) : document.getElementById(`page_prev_${Number(page[2]) - 2}`);
+    let prevButton = page[2] == 2 ? document.getElementById(`page_prev`) : document.getElementById(`page_prev_${Number(page[2]) - 2}`);
 
     if (page_number * 2 == dataLength) {
-      let next_button = document.getElementById(`page_next_${page[2]}`);
-      next_button.id = 'page_next';
-      next_button.style = 'background-color: brown';
+      let nextButton = document.getElementById(`page_next_${page[2]}`);
+      nextButton.id = 'page_next';
+      nextButton.style = 'background-color: brown';
     } else {
-      let next_button = document.getElementById(`page_next_${page[2]}`);
-      next_button.id = `page_next_${Number(page[2]) + 1}`;
-      next_button.style = 'background-color: #8bc34a;';
+      let nextButton = document.getElementById(`page_next_${page[2]}`);
+      nextButton.id = `page_next_${Number(page[2]) + 1}`;
+      nextButton.style = 'background-color: #8bc34a;';
     }
 
-    prev_button.id = `page_prev_${Number(page[2]) - 1}`;
-    prev_button.style = 'background-color: #8bc34a;';
+    prevButton.id = `page_prev_${Number(page[2]) - 1}`;
+    prevButton.style = 'background-color: #8bc34a;';
   } else if (page[1] == 'prev') {
-    let prev_button = document.getElementById(`page_prev_${page[2]}`);
-    let next_button = page_number * 2 < dataLength && page_number * 2 >= dataLength - 2 ? document.getElementById(`page_next`) : document.getElementById(`page_next_${Number(page[2]) + 2}`);
-    prev_button.id = `page_prev_${Number(page[2]) - 1}`;
-    next_button.id = `page_next_${Number(page[2]) + 1}`;
-    prev_button.style = 'background-color: #8bc34a;';
-    next_button.style = 'background-color: #8bc34a;';
+    let prevButton = document.getElementById(`page_prev_${page[2]}`);
+    let nextButton = page_number * 2 < dataLength && page_number * 2 >= dataLength - 2 ? document.getElementById(`page_next`) : document.getElementById(`page_next_${Number(page[2]) + 2}`);
+    prevButton.id = `page_prev_${Number(page[2]) - 1}`;
+    nextButton.id = `page_next_${Number(page[2]) + 1}`;
+    prevButton.style = 'background-color: #8bc34a;';
+    nextButton.style = 'background-color: #8bc34a;';
   }
-}
+};
 /**
- * 
+ * Handles media content, for now images in the post if present
  * @param {element} element Json element of respective Blog
  * @param {divElem} divElem div element for holding particular blog html
  * @param {index} index blog index
  */
 
 
-function handleMediaContent(element, divElem, index) {
+const handleMediaContent = (element, divElem, index) => {
   if (element?.media_content?.length > 0) {
     let carouselUnorderedList = document.createElement('ul');
     carouselUnorderedList.id = `carousel_${index + 1}`;
@@ -778,14 +768,14 @@ function handleMediaContent(element, divElem, index) {
     carouselUnorderedList.appendChild(nextImg);
     divElem.appendChild(carouselUnorderedList);
   }
-}
+};
 /**
- * 
+ * appends Edit or Delete button for post in the page
  * @param {div Element} divElem html div node of post to append EDIT and DELETE button 
  */
 
 
-function appendEditAndDeleteButton(divElem, element) {
+const appendEditAndDeleteButton = (divElem, element) => {
   let deleteButton = document.createElement('button');
   deleteButton.className = 'delete_button';
   let deleteIcon = document.createElement('i');
@@ -804,7 +794,13 @@ function appendEditAndDeleteButton(divElem, element) {
   editButton.addEventListener('click', _handlePost__WEBPACK_IMPORTED_MODULE_0__.handleEditPost);
   divElem.appendChild(deleteButton);
   divElem.appendChild(editButton);
-}
+};
+/**
+ * renders post Content
+ * @param {div element} divElem div element of individual post
+ * @param {element} element post in the form of JSON object
+ */
+
 
 const renderPostContent = (divElem, element) => {
   let postHead = document.createElement('h2');
@@ -889,12 +885,12 @@ function handlePagination(e) {
     return;
   }
 
-  const TRACKING_ID = e.target.id.split('_');
+  const trackingId = e.target.id.split('_');
   let list = document.getElementById("posts_list");
   list.remove();
   let spinner = document.getElementById('spinner');
 
-  if (TRACKING_ID[1] == 'prev') {
+  if (trackingId[1] == 'prev') {
     spinner.style = 'op-spin 1.5s linear infinite';
   } else {
     spinner.style = 'spin 1.5s linear infinite';
@@ -902,7 +898,7 @@ function handlePagination(e) {
 
   spinner.style = 'display: inline-flex';
   setTimeout(() => {
-    (0,_init__WEBPACK_IMPORTED_MODULE_0__.render)(TRACKING_ID);
+    (0,_init__WEBPACK_IMPORTED_MODULE_0__.render)(trackingId);
   }, 1000);
 }
 
@@ -932,6 +928,9 @@ let formPopup = document.getElementById('form_popup');
 let postTitle = document.getElementById('post_title');
 let postDescription = document.getElementById('post_description');
 let editButton = document.getElementById('edit_button');
+/**
+ * Handling error message in the form
+ */
 
 const resetErrorMessages = () => {
   let title_error = document.getElementById("title_error");
@@ -1042,13 +1041,13 @@ const postForm = body => {
 async function handlePostSubmit(e) {
   e.preventDefault();
   let body;
-  let title_error = document.getElementById("title_error");
-  let description_error = document.getElementById("description_error"); // if(e.target[0].value === '') {
-  //   title_error.innerText = 'This field is required';
+  let titleError = document.getElementById("title_error");
+  let descriptionError = document.getElementById("description_error"); // if(e.target[0].value === '') {
+  //   titleError.innerText = 'This field is required';
   //   return;
   // }
 
-  title_error.innerText = '';
+  titleError.innerText = '';
   window.editor.save().then(output => {
     if (output.blocks.length > 0 && e.target[0].value !== '') {
       (async function () {
@@ -1059,19 +1058,19 @@ async function handlePostSubmit(e) {
         const res = await postForm(body);
       })();
 
-      description_error.innerText = '';
-      title_error.innerText = '';
+      descriptionError.innerText = '';
+      titleError.innerText = '';
     } else if (output.blocks.length <= 0 && e.target[0].value !== '') {
-      description_error.innerText = 'This field is required';
-      title_error.innerText = '';
+      descriptionError.innerText = 'This field is required';
+      titleError.innerText = '';
       throw 'Required fields are missing';
     } else if (output.blocks.length > 0 && e.target[0].value == '') {
-      description_error.innerText = '';
-      title_error.innerText = 'This field is required';
+      descriptionError.innerText = '';
+      titleError.innerText = 'This field is required';
       throw 'Required fields are missing';
     } else {
-      description_error.innerText = 'This field is required';
-      title_error.innerText = 'This field is required';
+      descriptionError.innerText = 'This field is required';
+      titleError.innerText = 'This field is required';
       throw 'Required fields are missing';
     }
   }).catch(error => {
@@ -4025,7 +4024,7 @@ module.exports = function(hash, moduleMap, options) {
 /******/ 	
 /******/ 	/* webpack/runtime/getFullHash */
 /******/ 	(() => {
-/******/ 		__webpack_require__.h = () => "812a1e5aa5b1d8021285"
+/******/ 		__webpack_require__.h = () => "bf1673070d18cdcc0dc5"
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
