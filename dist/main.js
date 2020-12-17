@@ -541,42 +541,51 @@ function handleDeletePost(e) {
 async function handleSubmitPost(e, editorRef) {
   e.preventDefault();
   let postTitle = document.getElementById('post_title');
-  let titleError = document.getElementById("title_error");
 
-  if (postTitle.value === '') {
-    titleError.innerText = 'This field is required';
-    return;
-  } else {
+  postTitle.onchange = () => {
     titleError.innerText = '';
+  };
 
-    if (e.target.id && confirm('Do you really want to update the post..?')) {
-      let postTitle = document.getElementById('post_title');
-      let descriptionError = document.getElementById('description_error');
-      editorRef.save().then(output => {
-        if (output.blocks.length > 0) {
-          descriptionError.innerText = '';
-          fetch(`http://localhost:3000/data/${e.target.id}`, {
-            method: "PATCH",
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-              title: postTitle.value,
-              message: JSON.stringify(output)
-            })
-          }).then(() => {
-            window.open('/', '_self');
-          });
-          console.log('hey output', output, e);
-        } else {
-          descriptionError.innerText = 'This field is required.';
-          return;
-        }
-      }).catch(error => {
-        console.log('Saving failed: ', error);
-      }); // console.log('body', body)
+  let titleError = document.getElementById("title_error");
+  titleError.innerText = '';
+  let descriptionError = document.getElementById('description_error');
+  descriptionError.innerText = '';
+  editorRef.save().then(output => {
+    if (output.blocks.length > 0 && postTitle.value !== '') {
+      if (e.target.id && confirm('Do you really want to update the post..?')) {
+        descriptionError.innerText = '';
+        fetch(`http://localhost:3000/data/${e.target.id}`, {
+          method: "PATCH",
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            title: postTitle.value,
+            message: JSON.stringify(output)
+          })
+        }).then(() => {
+          window.open('/', '_self');
+        });
+        console.log('hey output', output, e);
+      } else {
+        return;
+      }
+    } else if (output.blocks.length <= 0 && postTitle.value !== '') {
+      descriptionError.innerText = 'This field is required';
+      titleError.innerText = '';
+      return;
+    } else if (output.blocks.length > 0 && postTitle.value === '') {
+      descriptionError.innerText = '';
+      titleError.innerText = 'This field is required';
+      return;
+    } else {
+      descriptionError.innerText = 'This field is required';
+      titleError.innerText = 'This field is required';
+      return;
     }
-  }
+  }).catch(error => {
+    console.log('Saving failed: ', error);
+  }); // console.log('body', body)
 }
 /**
  *  handles Edit post functionality
@@ -601,6 +610,7 @@ function handleEditPost(e) {
 
     formPopup.onsubmit = () => {
       handleSubmitPost(e, editorRef);
+      return false;
     };
   }).catch(function (error) {
     console.log('hey you ended up with error:  ', error);
@@ -1067,17 +1077,14 @@ async function handlePostSubmit(e) {
       descriptionError.innerText = 'This field is required';
       titleError.innerText = '';
       return;
-      throw 'Required fields are missing';
     } else if (output.blocks.length > 0 && e.target[0].value == '') {
       descriptionError.innerText = '';
       titleError.innerText = 'This field is required';
       return;
-      throw 'Required fields are missing';
     } else {
       descriptionError.innerText = 'This field is required';
       titleError.innerText = 'This field is required';
       return;
-      throw 'Required fields are missing';
     }
   }).catch(error => {
     console.log('Saving failed: ', error);
@@ -4029,7 +4036,7 @@ module.exports = function(hash, moduleMap, options) {
 /******/ 	
 /******/ 	/* webpack/runtime/getFullHash */
 /******/ 	(() => {
-/******/ 		__webpack_require__.h = () => "79666bed4ced0b0b399a"
+/******/ 		__webpack_require__.h = () => "7933f726dfc147e891c6"
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */

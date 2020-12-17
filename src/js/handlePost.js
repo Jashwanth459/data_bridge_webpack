@@ -23,41 +23,50 @@ export function handleDeletePost(e) {
 export async function handleSubmitPost (e, editorRef) {
     e.preventDefault();
     let postTitle = document.getElementById('post_title')
-    let titleError = document.getElementById("title_error");
-    if(postTitle.value === '') {
-        titleError.innerText = 'This field is required';
-        return;
-    } else {
-        titleError.innerText = '';
-        if (e.target.id && confirm('Do you really want to update the post..?')) {
-            let postTitle = document.getElementById('post_title')
-            let descriptionError = document.getElementById('description_error');
-            editorRef.save().then((output) => {
-                if (output.blocks.length > 0) {
-                    descriptionError.innerText = '';
-                    fetch(`http://localhost:3000/data/${e.target.id}`, {
-                        method: "PATCH",
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            title: postTitle.value,
-                            message: JSON.stringify(output)
-                        })
-                    }).then( () => {
-                        window.open('/', '_self');   
-                    })
-                    console.log('hey output', output, e)
-                } else {
-                    descriptionError.innerText = 'This field is required.'
-                    return;
-                }
-            }).catch((error) => {
-                console.log('Saving failed: ', error)
-            });
-            // console.log('body', body)
-        }
+    postTitle.onchange = () => {
+        titleError.innerText = ''
     }
+    let titleError = document.getElementById("title_error");
+    titleError.innerText = ''
+    let descriptionError = document.getElementById('description_error')
+    descriptionError.innerText = ''
+    editorRef.save().then((output) => {
+        if (output.blocks.length > 0 && postTitle.value !== '') {
+            if (e.target.id && confirm('Do you really want to update the post..?')) { 
+                descriptionError.innerText = '';
+                fetch(`http://localhost:3000/data/${e.target.id}`, {
+                    method: "PATCH",
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        title: postTitle.value,
+                        message: JSON.stringify(output)
+                    })
+                }).then( () => {
+                window.open('/', '_self');   
+                })
+                console.log('hey output', output, e)
+            } else {
+                return;
+            }
+        } else if (output.blocks.length <= 0 && postTitle.value !== '') {
+            descriptionError.innerText = 'This field is required'
+            titleError.innerText = ''
+            return
+        } else if (output.blocks.length > 0 && postTitle.value === '') {
+            descriptionError.innerText = ''
+            titleError.innerText = 'This field is required'
+            return
+        } else {
+            descriptionError.innerText = 'This field is required'
+            titleError.innerText = 'This field is required'
+            return
+        }
+    }).catch((error) => {
+        console.log('Saving failed: ', error)
+    });
+    // console.log('body', body)
 }
 
 /**
@@ -82,7 +91,8 @@ export function handleEditPost(e) {
         cleanEditor.innerHTML = ''
         const editorRef = editor(JSON.parse(res && res.message))
         formPopup.onsubmit = () => {
-            handleSubmitPost(e, editorRef)
+            handleSubmitPost(e, editorRef);
+            return false;
         }
     })
     .catch(function (error) {

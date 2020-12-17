@@ -65,17 +65,14 @@ export async function handlePostSubmit(e) {
         descriptionError.innerText = 'This field is required'
         titleError.innerText = ''
         return
-        throw 'Required fields are missing'
       } else if (output.blocks.length > 0 && e.target[0].value == '') {
         descriptionError.innerText = ''
         titleError.innerText = 'This field is required'
         return
-        throw 'Required fields are missing'
       } else {
         descriptionError.innerText = 'This field is required'
         titleError.innerText = 'This field is required'
         return
-        throw 'Required fields are missing'
       }
       
     }).catch((error) => {
