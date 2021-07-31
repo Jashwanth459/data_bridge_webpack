@@ -8,7 +8,7 @@ module.exports = {
   output: {
     path: path.join(__dirname, 'dist'),
     publicPath: '/',
-    filename: '[name].js'
+    filename: 'bundle.js'
   },
   mode: 'development',
   target: 'web',
@@ -26,6 +26,7 @@ module.exports = {
           failOnWarning: false
         }
       },
+      // transpiles code to ES5
       {
         test: /\.js$/,
         exclude: /node_modules/,
@@ -53,12 +54,12 @@ module.exports = {
     ]
   },
   plugins: [
+    // this is used for creating html file in dist folder
     new HtmlWebPackPlugin({
       template: "./src/html/index.html",
       filename: "./index.html",
       excludeChunks: [ 'server' ]
     }),
     new webpack.HotModuleReplacementPlugin(),
-    new webpack.NoEmitOnErrorsPlugin()
   ]
 }
